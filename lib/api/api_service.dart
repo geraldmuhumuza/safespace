@@ -65,6 +65,38 @@ class ApiService {
     }
   }
 
+  //save user
+  Future<Map<String, dynamic>> save_user({
+    required String firstname,
+    required String lastname,
+    required String email,
+    required String provider,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/save_user'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'firstname': firstname,
+          'lastname': lastname,
+          'email': email,
+          'provider': provider,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success']) {
+        await _saveToken(data['data']['sactum_token']);
+        return data;
+      } else {
+        throw Exception("Data not received");
+      }
+    } catch ($e) {
+      throw Exception($e.toString());
+    }
+  }
+
   // Firebase Login
   Future<Map<String, dynamic>> firebaseLogin({
     required String email,
@@ -212,6 +244,7 @@ class ApiService {
   //Saving the user location
 
   Future<Map<String, dynamic>> saveReportWithUser({
+    required String uid,
     required String reportTime,
     required String date,
     required String location,
@@ -224,6 +257,7 @@ class ApiService {
         Uri.parse('$baseUrl/report'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
+          'uid': uid,
           'reportTime': reportTime,
           'date': date,
           'location': location,
@@ -246,7 +280,8 @@ class ApiService {
   }
 
   //Adding the emergency contacts
-  Future<Map<String, dynamic>> add_emergencyContacts({
+  // ignore: non_constant_identifier_names
+  Future<Map<String, dynamic>> add_emergency_contacts({
     required String userid,
     required String contactName,
     required String contactNumber,

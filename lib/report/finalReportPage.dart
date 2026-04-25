@@ -43,6 +43,7 @@ class _FinalReportPageState extends State<FinalReportPage> {
     final authService = Provider.of<AuthService>(context, listen: false);
     try {
       final success = await authService.saveReportWithUser(
+        uid: _user!.uid,
         reportTime: reportTime,
         date: date,
         location: location,

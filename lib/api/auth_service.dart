@@ -563,6 +563,7 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<bool> saveReportWithUser({
+    required String uid,
     required String reportTime,
     required String date,
     required String location,
@@ -576,6 +577,7 @@ class AuthService extends ChangeNotifier {
       notifyListeners();
       // Login to Laravel backend
       final response = await _apiService.saveReportWithUser(
+        uid: uid,
         reportTime: reportTime,
         date: date,
         location: location,
@@ -604,7 +606,7 @@ class AuthService extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
       // Login to Laravel backend
-      final response = await _apiService.add_emergencyContacts(
+      final response = await _apiService.add_emergency_contacts(
         userid: userid,
         contactName: contactName,
         contactNumber: contactNumber,
