@@ -119,7 +119,10 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 54, 58, 77),
         automaticallyImplyLeading: false,
-        title: const Text('PROFILE MANAGEMENT'),
+        title: const Text(
+          'PROFILE MANAGEMENT',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: SingleChildScrollView(
         child: _user == null
@@ -719,15 +722,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Manage your account and preferences",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
-
+                      // const Padding(
+                      //   padding: EdgeInsets.all(10.0),
+                      //   child: Text(
+                      //     "Manage your account and preferences",
+                      //     style: TextStyle(fontSize: 18, color: Colors.white),
+                      //     textAlign: TextAlign.left,
+                      //   ),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: StreamBuilder<DocumentSnapshot>(
@@ -761,40 +763,45 @@ class _ProfilePageState extends State<ProfilePage> {
                             String formattedDate =
                                 "${dateTime.day}-${dateTime.month}-${dateTime.year}";
                             return Card(
-                              color: const Color(0xff424141),
+                              color: const Color.fromARGB(255, 54, 58, 77),
                               child: Column(
                                 children: [
                                   IconButton(
                                     onPressed: _uploading
                                         ? null
                                         : () => _pick(camera: false),
-                                    icon: Icon(Icons.account_circle, size: 30),
-                                    iconSize: 40,
+                                    icon: Icon(
+                                      Icons.account_circle,
+                                      size: 50,
+                                      color: Colors.white,
+                                    ),
+                                    iconSize: 50,
+                                    style: IconButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      // maximumSize: Size(10, 15),
+                                      // minimumSize: Size(10, 15),
+                                    ),
                                   ),
 
                                   ListTile(
-                                    leading: IconButton(
-                                      icon: const Icon(
-                                        Icons.account_circle,
-                                        color: Colors.blue,
-                                        size: 24,
-                                      ),
-                                      style: IconButton.styleFrom(
-                                        backgroundColor: Colors.blue,
-                                      ),
-                                      onPressed: () {},
-                                    ),
+                                    // leading: IconButton(
+                                    //   icon: const Icon(
+                                    //     Icons.account_circle,
+                                    //     color: Colors.blue,
+                                    //     size: 24,
+                                    //   ),
+                                    //   style: IconButton.styleFrom(
+                                    //     backgroundColor: Colors.blue,
+                                    //   ),
+                                    //   onPressed: () {},
+                                    // ),
                                     trailing: IconButton(
                                       icon: const Icon(
                                         Icons.exit_to_app,
                                         color: Colors.white,
                                         size: 30,
                                       ),
-                                      style: IconButton.styleFrom(
-                                        backgroundColor: Colors.green,
-                                        maximumSize: Size(10, 15),
-                                        minimumSize: Size(10, 15),
-                                      ),
+
                                       onPressed: () {
                                         showDialog(
                                           context: context,
@@ -918,7 +925,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text(
                                   "Personal Information",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -926,7 +933,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "Edit Your profile details",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -990,7 +997,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text(
                                   "Anonymous mode",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -998,7 +1005,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "Have your identity in your interactions",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -1026,7 +1033,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text(
                                   "Privacy Settings",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -1034,7 +1041,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "Control who can see your information",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -1062,7 +1069,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text(
                                   "Data & Security",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -1070,7 +1077,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "Manage your data and security preferences",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -1100,7 +1107,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       Card(
-                        color: const Color(0x613d3c3c),
+                        color: const Color.fromARGB(255, 54, 58, 77),
                         child: Column(
                           children: [
                             Card(
@@ -1124,7 +1131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text(
                                   "Emergency Contacts",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -1132,7 +1139,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "Add trusted people to contacts",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -1168,7 +1175,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text(
                                   "Trusted Support Persons",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -1176,7 +1183,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "Someone who can help during crisis",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -1199,7 +1206,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       Card(
-                        color: const Color(0x613d3c3c),
+                        color: const Color.fromARGB(255, 54, 58, 77),
                         child: Column(
                           children: [
                             Card(
@@ -1223,7 +1230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text(
                                   "Notifications",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -1231,7 +1238,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "Daily reminders and support messages",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -1267,7 +1274,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "Toggle dark appearance",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -1295,7 +1302,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text(
                                   "Sound Effects",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -1303,7 +1310,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "App sounds and haptic feedback",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -1350,7 +1357,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text(
                                   "Help Center",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -1358,7 +1365,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "Find answers and get suppoert",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -1386,7 +1393,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text(
                                   "Share App",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -1394,7 +1401,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "Help others find help",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -1422,7 +1429,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text(
                                   "Rate SafeSpace",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -1430,7 +1437,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: const Text(
                                   "Share your feedback",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                   ),
                                 ),

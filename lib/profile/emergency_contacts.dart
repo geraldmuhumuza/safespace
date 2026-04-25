@@ -5,8 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safehome/api/auth_service.dart';
 import 'package:safehome/main.dart';
 import "package:flutter_contacts/flutter_contacts.dart";
+
+final authService = AuthService();
 
 class EmergencyPage extends StatefulWidget {
   const EmergencyPage({super.key});
@@ -49,15 +52,22 @@ class _EmergencyPageState extends State<EmergencyPage> {
         final phone = contact.phones.first.number;
 
         // Save to Firestore
-        await FirebaseFirestore.instance
-            .collection('emergency_contacts')
-            .doc(_user!.uid)
-            .collection('contacts')
-            .add({
-              'name': name,
-              'phone': phone,
-              'createdAt': FieldValue.serverTimestamp(),
-            });
+        // await FirebaseFirestore.instance
+        //     .collection('emergency_contacts')
+        //     .doc(_user!.uid)
+        //     .collection('contacts')
+        //     .add({
+        //       'name': name,
+        //       'phone': phone,
+        //       'createdAt': FieldValue.serverTimestamp(),
+        //     });
+
+        //save to the database
+        await authService.saveEmergencyContact(
+          userid: _user!.uid,
+          contactName: name,
+          contactNumber: phone,
+        );
 
         debugPrint("Saved: $name - $phone");
       } else {
@@ -71,6 +81,16 @@ class _EmergencyPageState extends State<EmergencyPage> {
     } else {
       // if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       //   throw "Could not open contacts app";
+    }
+  }
+
+  Future<void> obtainEmergencyContacts() async {
+    final success = await authService.obtain_emergency_contacts(_user!.uid);
+    if (!success) {
+      debugPrint("Failed to obtain emergency contacts");
+    } else {
+      debugPrint("Successfully obtained emergency contacts");
+      //debugPrint("Emergency contacts: $_userData");
     }
   }
 
@@ -124,19 +144,47 @@ class _EmergencyPageState extends State<EmergencyPage> {
                         );
                       }
 
-                      final contacts = snapshot.data!.docs;
                       return ListView.builder(
-                        itemCount: contacts.length,
+                        itemCount: authService.emergencyContacts.length,
                         itemBuilder: (context, index) {
-                          final doc = contacts[index];
-                          final data = doc.data() as Map<String, dynamic>;
+                          final contacts = authService.emergencyContacts[index];
                           return ListTile(
                             leading: const Icon(Icons.person),
-                            title: Text(data['name'] ?? 'Unknown'),
-                            subtitle: Text(data['phone'] ?? 'No phone'),
+                            title: Text(contacts.contactName ?? 'Unknown'),
+                            subtitle: Text(contacts.phone ?? 'No phone'),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => deleteContact(doc.id),
+                              onPressed: () async {
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                    title: Text('Delete Contact'),
+                                    content: Text(
+                                      'Are you sure you want to delete ${contacts.contactName}?',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(ctx, false),
+                                        child: Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(ctx, true),
+                                        child: Text(
+                                          'Delete',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                if (confirm == true) {
+                                  await authService.delete_emergency_contact(
+                                    contacts.id,
+                                  );
+                                }
+                              },
                             ),
                           );
                         },

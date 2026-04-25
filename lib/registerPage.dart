@@ -522,7 +522,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 60,
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => _handleRegister(),
+                    onPressed: () => _handleRegister,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(10),
                       fixedSize: const Size.fromWidth(40),

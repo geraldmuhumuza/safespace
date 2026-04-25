@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -207,6 +208,9 @@ class ApiService {
   }
 
   //Saving Other information to the database
+
+  //Saving the user location
+
   Future<Map<String, dynamic>> saveReportWithUser({
     required String reportTime,
     required String date,
@@ -235,6 +239,147 @@ class ApiService {
         return data;
       } else {
         throw Exception(data['message'] ?? 'Signup failed');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  //Adding the emergency contacts
+  Future<Map<String, dynamic>> add_emergencyContacts({
+    required String userid,
+    required String contactName,
+    required String contactNumber,
+  }) async {
+    try {
+      //Check this Url in the laravel project
+      final response = await http.post(
+        Uri.parse('$baseUrl/add_emergency_contacts'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'userid': userid,
+          'contactName': contactName,
+          'contactNumber': contactNumber,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 201 && data['success']) {
+        // Save Sanctum token
+        return data;
+      } else {
+        throw Exception(data['message'] ?? 'Signup failed');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  //Obtain Emergency contacts
+
+  Future<Map<String, dynamic>> obtain_emergencyContacts(String uid) async {
+    try {
+      final token = await _getToken();
+
+      if (token == null) {
+        throw Exception('No authentication token');
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/obtain_emergency_contacts/$uid'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success']) {
+        return data;
+      } else {
+        throw Exception(
+          data['message'] ?? 'Failed to obtain emergency contacts',
+        );
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  //Deleting the emergency contact
+  Future<Map<String, dynamic>> delete_emergencyContact(int contactId) async {
+    try {
+      final token = await _getToken();
+
+      if (token == null) throw Exception('No authentication token');
+
+      final response = await http.delete(
+        Uri.parse('$baseUrl/delete_emergency_contact/$contactId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success']) {
+        return data;
+      } else {
+        throw Exception(data['message'] ?? 'Failed to delete contact');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  //Obtaining counsellors
+  Future<Map<String, dynamic>> obtain_counsellors() async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        throw Exception('No authentication token');
+      }
+      final response = await http.get(
+        Uri.parse('$baseUrl/obtain_counsellors'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['success']) {
+        return data;
+      } else {
+        throw Exception(data['message'] ?? 'Failed to obtain counsellors');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> obtain_support() async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        throw ("No Authentication Token");
+      }
+      final response = await http.get(
+        Uri.parse('$baseUrl/obtain_support'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['success']) {
+        return data;
+      } else {
+        throw Exception(
+          data['message'] ?? 'Failed to obtain the support information',
+        );
       }
     } catch (e) {
       throw Exception('Network error: $e');

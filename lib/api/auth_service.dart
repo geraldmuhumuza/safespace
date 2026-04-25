@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safehome/home_page.dart';
+import 'package:safehome/models/Emergency_contact_model.dart';
 import 'package:safehome/profile/profile.dart';
 import 'api_service.dart';
 
@@ -588,6 +589,82 @@ class AuthService extends ChangeNotifier {
       return true;
     } catch (e) {
       debugPrint(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> saveEmergencyContact({
+    required String userid,
+    required String contactName,
+    required String contactNumber,
+  }) async {
+    try {
+      debugPrint("Attempting to save emergency contact");
+      _isLoading = true;
+      _errorMessage = null;
+      notifyListeners();
+      // Login to Laravel backend
+      final response = await _apiService.add_emergencyContacts(
+        userid: userid,
+        contactName: contactName,
+        contactNumber: contactNumber,
+      );
+      debugPrint("Laravel emergency contact response: $response");
+      _userData = response['data']['user'];
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
+
+  List<EmergencyContact> _emergencyContacts = [];
+  List<EmergencyContact> get emergencyContacts => _emergencyContacts;
+
+  Future<bool> obtain_emergency_contacts(String uid) async {
+    try {
+      debugPrint('Attempting to obtain emergency contacts: $_userData');
+      _isLoading = true;
+      _errorMessage = null;
+      notifyListeners();
+      final response = await _apiService.obtain_emergencyContacts(uid);
+      debugPrint("Laravel emergency contacts response: $response");
+      _emergencyContacts = (response['data'] as List)
+          .map((e) => EmergencyContact.fromJson(e))
+          .toList();
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  //Deleting the emergency contact
+  Future<bool> delete_emergency_contact(int contactId) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      await _apiService.delete_emergencyContact(contactId);
+
+      // Remove from local list without re-fetching from API
+      _emergencyContacts.removeWhere((contact) => contact.id == contactId);
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      _errorMessage = e.toString();
+      _isLoading = false;
+      notifyListeners();
       return false;
     }
   }
