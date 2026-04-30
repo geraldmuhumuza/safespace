@@ -143,52 +143,19 @@ class _HomePageContentState extends State<HomePageContent> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.account_circle, size: 40),
+            onPressed: () {
+              // Handle icon press
+            },
+          ),
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.white,
           title: Padding(
             padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 0),
             child: ListTile(
-              title: const Text(
-                "SAFESPACE",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-
-              subtitle: const Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 10.0),
-                child: Text(
-                  "You are safe here",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              trailing: IconButton(
-                padding: EdgeInsets.only(right: 5),
-                onPressed: () {
-                  debugPrint("Menu button pressed");
-                },
-                icon: const Icon(
-                  Icons.menu_sharp,
-                  size: 35,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              //greeting message
-              StreamBuilder(
+              title: StreamBuilder(
                 stream: userProfileStream(_user!.uid),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -209,22 +176,79 @@ class _HomePageContentState extends State<HomePageContent> {
                   }
                   final data = snapshot.data!.data() as Map<String, dynamic>;
                   return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    //mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        "Welcome, ${data['firstname']}",
+                        "Hello, ${data['lastname']}",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.left,
                       ),
                     ],
                   );
                 },
               ),
-
+              trailing: IconButton(
+                padding: EdgeInsets.only(right: 0),
+                onPressed: () {
+                  debugPrint("Menu button pressed");
+                  MenuAnchor(
+                    menuChildren: [Text("Menu Item 1"), Text("Menu Item 2")],
+                  );
+                },
+                icon: const Icon(
+                  Icons.menu_sharp,
+                  size: 30,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              //greeting message
+              // StreamBuilder(
+              //   stream: userProfileStream(_user!.uid),
+              //   builder: (context, snapshot) {
+              //     if (snapshot.hasError) {
+              //       return Column(
+              //         children: [
+              //           Text("Something went Wrong"),
+              //           Text("Please try Again"),
+              //         ],
+              //       );
+              //     }
+              //     if (snapshot.hasData == false) {
+              //       return Column(
+              //         children: [
+              //           Text("Something went Wrong"),
+              //           Text("Please try Again"),
+              //         ],
+              //       );
+              //     }
+              //     final data = snapshot.data!.data() as Map<String, dynamic>;
+              //     return Column(
+              //       mainAxisAlignment: MainAxisAlignment.start,
+              //       children: [
+              //         Text(
+              //           "Welcome, ${data['firstname']}",
+              //           style: TextStyle(
+              //             color: Colors.white,
+              //             fontSize: 18,
+              //             fontWeight: FontWeight.bold,
+              //           ),
+              //           textAlign: TextAlign.center,
+              //         ),
+              //       ],
+              //     );
+              //   },
+              // ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(

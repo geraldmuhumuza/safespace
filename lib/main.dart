@@ -1,52 +1,26 @@
 //import 'dart:html';
 // ignore_for_file: unused_element
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safehome/api/auth_service.dart';
+import 'package:safehome/app_user.dart';
+import 'package:safehome/home_page.dart';
+import 'package:safehome/landing/loading_page.dart';
 import 'package:safehome/notifications/notifications_service.dart';
+//import 'package:safehome/providers/auth_provider.dart';
+import 'package:safehome/tabs/home.dart';
 import 'firebase_options.dart';
 import 'landing/landingPage.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-class AppUser {
-  final String uid;
-  final String email;
-  final String firstName;
-  final String lastName;
-  final String contact;
-  final String createdAt;
-
-  AppUser({
-    required this.uid,
-    required this.email,
-    required this.firstName,
-    required this.lastName,
-    required this.contact,
-    required this.createdAt,
-  });
-}
-
-class UserProvider with ChangeNotifier {
-  AppUser? _user;
-
-  AppUser? get user => _user;
-
-  void setUser(AppUser user) {
-    _user = user;
-    notifyListeners();
-  }
-
-  void clearUser() {
-    _user = null;
-    notifyListeners();
-  }
-}
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Future.wait([
+    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
+  ]);
 
   await SentryFlutter.init(
     (options) {
@@ -59,7 +33,7 @@ void main() async {
     appRunner: () => runApp(
       SentryWidget(
         child: ChangeNotifierProvider(
-          create: (_) => UserProvider(),
+          create: (_) => AuthService(),
           child: const SafeHome(),
         ),
       ),
@@ -75,12 +49,21 @@ class SafeHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthService())],
-      child: MaterialApp(
-        title: "Home",
-        debugShowCheckedModeBanner: false,
-        home: LandingPage(),
+    return MaterialApp(
+      title: 'SafeHome',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: StreamBuilder<User?>(
+        // This stream emits the cached user INSTANTLY on first event
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const LoadingScreen(); // only shown briefly
+          }
+          if (snapshot.hasData) {
+            return const SafeSpace(); // logged-in user goes straight here
+          }
+          return const LandingPage();
+        },
       ),
     );
   }

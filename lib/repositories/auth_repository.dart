@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 // import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:safehome/app_user.dart';
 import 'package:safehome/home_page.dart';
-import 'package:safehome/main.dart';
 import '../models/user_model.dart';
 
 class AuthRepository {
@@ -115,13 +115,14 @@ class AuthRepository {
 
       Provider.of<UserProvider>(context, listen: false).setUser(
         AppUser(
-          uid: uid,
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-          contact: contact,
-          createdAt: FieldValue.serverTimestamp().toString(),
-        ),
+              uid: uid,
+              email: email,
+              firstName: firstName,
+              lastName: lastName,
+              contact: contact,
+              createdAt: FieldValue.serverTimestamp().toString(),
+            )
+            as User,
       );
 
       // Navigator.pushReplacement(
@@ -226,13 +227,14 @@ class AuthRepository {
     if (!mounted) return;
     Provider.of<UserProvider>(context, listen: false).setUser(
       AppUser(
-        uid: uid,
-        email: data['email'],
-        firstName: data['firstname'],
-        lastName: data['lastname'],
-        contact: data['Contact'],
-        createdAt: data['createdAt'].toString(),
-      ),
+            uid: uid,
+            email: data['email'],
+            firstName: data['firstname'],
+            lastName: data['lastname'],
+            contact: data['Contact'],
+            createdAt: data['createdAt'].toString(),
+          )
+          as User,
     );
   }
 

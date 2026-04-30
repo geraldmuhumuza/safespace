@@ -1,7 +1,9 @@
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:safehome/app_user.dart';
 import 'package:show_hide_password/show_hide_password_text_field.dart';
 
 import '../main.dart';
@@ -20,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final _password = TextEditingController();
 
   //un
-  AppUser? get user => context.watch<UserProvider>().user;
+  User? get user => context.watch<UserProvider>().user;
 
   Future<void> verifyAndNavigate(BuildContext context) async {
     final callable = FirebaseFunctions.instance.httpsCallable('verifyUser');

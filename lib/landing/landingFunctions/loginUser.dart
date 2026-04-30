@@ -1,11 +1,8 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:safehome/main.dart';
-
+import 'package:safehome/app_user.dart';
 import '../../home_page.dart';
 
 Future<void> loginUser(
@@ -69,12 +66,13 @@ Future<void> loadUser(BuildContext context, bool mounted) async {
   if (!mounted) return;
   Provider.of<UserProvider>(context, listen: false).setUser(
     AppUser(
-      uid: uid,
-      email: data['email'],
-      firstName: data['firstname'],
-      lastName: data['lastname'],
-      contact: data['Contact'],
-      createdAt: data['createdAt'].toString(),
-    ),
+          uid: uid,
+          email: data['email'],
+          firstName: data['firstname'],
+          lastName: data['lastname'],
+          contact: data['Contact'],
+          createdAt: data['createdAt'].toString(),
+        )
+        as User,
   );
 }

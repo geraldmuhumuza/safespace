@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safehome/api/auth_service.dart';
+import 'package:safehome/app_user.dart';
 import 'package:safehome/main.dart';
 import "package:flutter_contacts/flutter_contacts.dart";
 
@@ -21,7 +22,7 @@ class EmergencyPage extends StatefulWidget {
 class _EmergencyPageState extends State<EmergencyPage> {
   // ignore: unused_field
   User? _user;
-  AppUser? get user => context.watch<UserProvider>().user;
+  User? get user => context.watch<UserProvider>().user;
 
   @override
   void initState() {

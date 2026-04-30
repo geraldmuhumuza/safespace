@@ -7,11 +7,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safehome/home_page.dart';
+import 'package:safehome/models/Counsellor_model.dart';
 import 'package:safehome/models/Emergency_contact_model.dart';
+import 'package:safehome/models/support_model.dart';
 import 'package:safehome/profile/profile.dart';
 import 'api_service.dart';
 
-class AuthService extends ChangeNotifier {
+class AuthService with ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   //final GoogleSignIn _googleSignIn = GoogleSignIn();
   final ApiService _apiService = ApiService();
@@ -668,6 +670,51 @@ class AuthService extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return false;
+    }
+  }
+
+  List<Counsellor_Model> _counsellors = [];
+  List<Counsellor_Model> get counsellor => _counsellors;
+
+  Future<bool> obtain_counsellors() async {
+    try {
+      debugPrint('Attempting to obtain Counsellors');
+      _isLoading = true;
+      _errorMessage = null;
+      notifyListeners();
+      final response = await _apiService.obtain_counsellors();
+      debugPrint("Laravel Counselloer response: $response");
+      _counsellors = (response['data'] as List)
+          .map((e) => Counsellor_Model.fromJson(e))
+          .toList();
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  List<Support_Model> _support = [];
+  List<Support_Model> get support => _support;
+  Future<bool> obtain_support() async {
+    try {
+      debugPrint('Attempting to obtain Counsellors');
+      _isLoading = true;
+      _errorMessage = null;
+      notifyListeners();
+      final response = await _apiService.obtain_support();
+      debugPrint("Laravel Support response: $response");
+      _support = (response['data'] as List)
+          .map((e) => Support_Model.fromJson(e))
+          .toList();
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

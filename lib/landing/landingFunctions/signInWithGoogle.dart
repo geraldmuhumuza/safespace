@@ -66,7 +66,8 @@ Future<void> signInWithGoogle(BuildContext context, bool mounted) async {
         debugPrint("New user - creating document");
         // New user, create a new document
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-          'firstname': user.displayName,
+          'firstname': user.displayName!.split(' ')[0],
+          'lastname': user.displayName!.split(' ')[1],
           'email': user.email,
           'uid': user.uid,
           'provider': 'google',

@@ -18,6 +18,8 @@ import 'package:safehome/report/report.dart';
 
 import '../../home_page.dart';
 
+final authService = AuthService();
+
 class Counsellor extends StatefulWidget {
   const Counsellor({super.key});
 
@@ -70,14 +72,14 @@ class _CounsellorState extends State<Counsellor> {
                   return const Center(child: Text("No Counsellor available"));
                 }
 
-                final docs = snapshot.data!.docs;
+                // final docs = snapshot.data!.docs;
 
                 return ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: docs.length,
+                  itemCount: authService.counsellor.length,
                   itemBuilder: (context, index) {
-                    final data = docs[index].data() as Map<String, dynamic>;
+                    final data = authService.counsellor[index];
                     //final c = counsellors[index];
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -93,8 +95,8 @@ class _CounsellorState extends State<Counsellor> {
                                 FirebaseFirestore.instance
                                     .collection("counsellors")
                                     .where(
-                                      data["Name"],
-                                      isEqualTo: "Dr. Sarah Williams",
+                                      data.counsellorName,
+                                      isEqualTo: data.counsellorName,
                                     )
                                     .limit(1)
                                     .snapshots();
@@ -105,7 +107,7 @@ class _CounsellorState extends State<Counsellor> {
                                 size: 30,
                               ),
                               title: Text(
-                                data['Name'],
+                                data.counsellorName,
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
@@ -113,7 +115,7 @@ class _CounsellorState extends State<Counsellor> {
                                 ),
                               ),
                               subtitle: Text(
-                                data['Role'],
+                                data.role,
                                 style: const TextStyle(color: Colors.black),
                               ),
                               trailing: IconButton(
@@ -128,10 +130,7 @@ class _CounsellorState extends State<Counsellor> {
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  final phone = data['phonenumber'].replaceAll(
-                                    ' ',
-                                    '',
-                                  );
+                                  final phone = data.phone.replaceAll(' ', '');
                                   openDialer(phone);
                                 },
                               ),
