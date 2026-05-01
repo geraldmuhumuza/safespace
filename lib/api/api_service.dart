@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -391,6 +392,36 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Network error: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> create_counsellor_appointment({
+    required int userId,
+    required int counsellorId,
+    required DateTime appointmentTime,
+  }) async {
+    try {
+      //Check this Url in the laravel project
+      final response = await http.post(
+        Uri.parse('$baseUrl/add_appointment'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'user_id': userId,
+          'counsellor_id': counsellorId,
+          'appointment_time': appointmentTime.toIso8601String(),
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 201 && data['success']) {
+        // Save Sanctum token
+        return data;
+      } else {
+        throw Exception(data['message'] ?? 'Signup failed');
+      }
+    } catch (e) {
+      throw Exception('Failed to create counsellor appointment $e');
     }
   }
 

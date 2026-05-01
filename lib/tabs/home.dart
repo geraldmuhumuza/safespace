@@ -7,8 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:provider/provider.dart';
+import 'package:safehome/landing/landingPage.dart';
 import 'package:safehome/landing/locationPermission.dart';
+import 'package:safehome/profile/preferencePage.dart';
+import 'package:safehome/profile/profile.dart';
 import 'package:safehome/tabs/tab/constants.dart';
+import '../app_user.dart';
 import 'tab/anonymouschat.dart';
 import 'tab/counsellors.dart';
 
@@ -33,7 +38,7 @@ class _HomePageContentState extends State<HomePageContent> {
         index = (index + 1) % messages.length;
       });
     });
-    _getLocation();
+    //_getLocation();
     //requestLocationPermission();
     //requestNotificationPermission();
   }
@@ -47,6 +52,12 @@ class _HomePageContentState extends State<HomePageContent> {
   LatLng? _currentLocation;
   //final MapController _mapController = MapController();
   //
+  Future<void> logoutUser() async {
+    await FirebaseAuth.instance.signOut();
+    // ignore: use_build_context_synchronously
+    context.read<UserProvider>().clearUser();
+    debugPrint("User logged out because app closed/backgrounded");
+  }
 
   Future<void> _getLocation() async {
     try {
@@ -143,11 +154,101 @@ class _HomePageContentState extends State<HomePageContent> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.account_circle, size: 40),
-            onPressed: () {
-              // Handle icon press
+          leading: MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.account_circle,
+                  size: 30,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
             },
+            menuChildren: [
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.account_circle),
+                child: const Text('Edit Profile'),
+                onPressed: () => Profile(),
+              ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.calendar_today),
+                child: Text("Appointments"),
+                onPressed: () {},
+              ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.private_connectivity),
+                child: const Text('Privacy Settings'),
+                onPressed: () => PreferencesPage(),
+              ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.settings),
+                child: const Text('Preferences'),
+                onPressed: () => PreferencesPage(),
+              ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.data_usage),
+                child: const Text('Data and Security'),
+                onPressed: () => PreferencesPage(),
+              ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.logout),
+                child: const Text('Logout'),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text(
+                        'Log Out',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      content: const Text("Are you sure you want to log out?"),
+                      actions: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 8.0, 0),
+                          child: TextButton(
+                            onPressed: () {
+                              logoutUser();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LandingPage(),
+                                ),
+                              );
+                            },
+                            child: const Text('Yes'),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
+                          child: TextButton(
+                            onPressed: () {
+                              return;
+                            },
+                            child: const Text('No'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+            style: MenuStyle(
+              padding: WidgetStatePropertyAll(
+                EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
+              ),
+              elevation: WidgetStatePropertyAll(40),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+            ),
           ),
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
@@ -191,18 +292,50 @@ class _HomePageContentState extends State<HomePageContent> {
                   );
                 },
               ),
-              trailing: IconButton(
-                padding: EdgeInsets.only(right: 0),
-                onPressed: () {
-                  debugPrint("Menu button pressed");
-                  MenuAnchor(
-                    menuChildren: [Text("Menu Item 1"), Text("Menu Item 2")],
+              trailing: MenuAnchor(
+                builder: (context, controller, child) {
+                  return IconButton(
+                    icon: const Icon(
+                      Icons.menu_sharp,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      if (controller.isOpen) {
+                        controller.close();
+                      } else {
+                        controller.open();
+                      }
+                    },
                   );
                 },
-                icon: const Icon(
-                  Icons.menu_sharp,
-                  size: 30,
-                  color: Colors.white,
+                menuChildren: [
+                  MenuItemButton(
+                    leadingIcon: const Icon(Icons.contact_emergency),
+                    child: const Text('Emergency Contacts'),
+                    onPressed: () {},
+                  ),
+                  MenuItemButton(
+                    leadingIcon: const Icon(Icons.share),
+                    child: const Text('Share'),
+                    onPressed: () {},
+                  ),
+                  MenuItemButton(
+                    leadingIcon: const Icon(Icons.star),
+                    child: const Text('Favourite'),
+                    onPressed: () {},
+                  ),
+                ],
+                style: MenuStyle(
+                  padding: WidgetStatePropertyAll(
+                    EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
+                  ),
+                  elevation: WidgetStatePropertyAll(40),
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -212,43 +345,6 @@ class _HomePageContentState extends State<HomePageContent> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              //greeting message
-              // StreamBuilder(
-              //   stream: userProfileStream(_user!.uid),
-              //   builder: (context, snapshot) {
-              //     if (snapshot.hasError) {
-              //       return Column(
-              //         children: [
-              //           Text("Something went Wrong"),
-              //           Text("Please try Again"),
-              //         ],
-              //       );
-              //     }
-              //     if (snapshot.hasData == false) {
-              //       return Column(
-              //         children: [
-              //           Text("Something went Wrong"),
-              //           Text("Please try Again"),
-              //         ],
-              //       );
-              //     }
-              //     final data = snapshot.data!.data() as Map<String, dynamic>;
-              //     return Column(
-              //       mainAxisAlignment: MainAxisAlignment.start,
-              //       children: [
-              //         Text(
-              //           "Welcome, ${data['firstname']}",
-              //           style: TextStyle(
-              //             color: Colors.white,
-              //             fontSize: 18,
-              //             fontWeight: FontWeight.bold,
-              //           ),
-              //           textAlign: TextAlign.center,
-              //         ),
-              //       ],
-              //     );
-              //   },
-              // ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
