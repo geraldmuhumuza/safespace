@@ -19,6 +19,7 @@ import 'package:safehome/report/report.dart';
 import '../../home_page.dart';
 
 final authService = AuthService();
+User? _user;
 
 class Counsellor extends StatefulWidget {
   const Counsellor({super.key});
@@ -30,7 +31,7 @@ class Counsellor extends StatefulWidget {
 class _CounsellorState extends State<Counsellor> {
   DateTime? selectedDate;
 
-  Future<void> _selectDOB(BuildContext context) async {
+  Future<void> _selectDOB(BuildContext context, int counsellor_id) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -40,6 +41,16 @@ class _CounsellorState extends State<Counsellor> {
     if (picked != null) {
       setState(() {
         selectedDate = picked.toLocal();
+        String appointmentDate =
+            "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}";
+        String appointmentTime =
+            "${selectedDate!.hour}:${selectedDate!.minute}";
+        authService.add_appointment(
+          user_id: _user!.uid,
+          counsellor_id: counsellor_id,
+          appointmentDate: appointmentDate,
+          appointmentTime: appointmentTime,
+        );
         // Format as YYYY-MM-DD
       });
     }
@@ -91,7 +102,8 @@ class _CounsellorState extends State<Counsellor> {
                           children: <Widget>[
                             ListTile(
                               onTap: () {
-                                _selectDOB(context);
+                                int id = authService.counsellor[index].id;
+                                _selectDOB(context, id);
                                 FirebaseFirestore.instance
                                     .collection("counsellors")
                                     .where(

@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safehome/home_page.dart';
+import 'package:safehome/models/Appointment_model.dart';
 import 'package:safehome/models/Counsellor_model.dart';
 import 'package:safehome/models/Emergency_contact_model.dart';
 import 'package:safehome/models/support_model.dart';
@@ -598,7 +599,7 @@ class AuthService with ChangeNotifier {
   }
 
   Future<bool> saveEmergencyContact({
-    required String userid,
+    required String user_id,
     required String contactName,
     required String contactNumber,
   }) async {
@@ -609,7 +610,7 @@ class AuthService with ChangeNotifier {
       notifyListeners();
       // Login to Laravel backend
       final response = await _apiService.add_emergency_contacts(
-        userid: userid,
+        user_id: user_id,
         contactName: contactName,
         contactNumber: contactNumber,
       );
@@ -627,13 +628,13 @@ class AuthService with ChangeNotifier {
   List<EmergencyContact> _emergencyContacts = [];
   List<EmergencyContact> get emergencyContacts => _emergencyContacts;
 
-  Future<bool> obtain_emergency_contacts(String uid) async {
+  Future<bool> obtain_emergency_contacts(String user_id) async {
     try {
       debugPrint('Attempting to obtain emergency contacts: $_userData');
       _isLoading = true;
       _errorMessage = null;
       notifyListeners();
-      final response = await _apiService.obtain_emergencyContacts(uid);
+      final response = await _apiService.obtain_emergencyContacts(user_id);
       debugPrint("Laravel emergency contacts response: $response");
       _emergencyContacts = (response['data'] as List)
           .map((e) => EmergencyContact.fromJson(e))
@@ -700,7 +701,7 @@ class AuthService with ChangeNotifier {
   List<Support_Model> get support => _support;
   Future<bool> obtain_support() async {
     try {
-      debugPrint('Attempting to obtain Counsellors');
+      debugPrint('Attempting to obtain Support');
       _isLoading = true;
       _errorMessage = null;
       notifyListeners();
@@ -710,6 +711,56 @@ class AuthService with ChangeNotifier {
           .map((e) => Support_Model.fromJson(e))
           .toList();
 
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<bool> add_appointment({
+    required String user_id,
+    required int counsellor_id,
+    required String appointmentDate,
+    required String appointmentTime,
+  }) async {
+    try {
+      debugPrint("Attempting to save emergency contact");
+      _isLoading = true;
+      _errorMessage = null;
+      notifyListeners();
+      // Login to Laravel backend
+      final response = await _apiService.create_counsellor_appointment(
+        user_id: user_id,
+        counsellor_id: counsellor_id,
+        appointmentDate: DateTime.parse("$appointmentDate"),
+        appointmentTime: DateTime.parse("$appointmentTime"),
+      );
+      debugPrint("Laravel emergency contact response: $response");
+      _userData = response['data']['user'];
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  List<AppointmentModel> _appointments = [];
+  List<AppointmentModel> get appointments => _appointments;
+  Future<bool> obtain_appointments(int user_id) async {
+    try {
+      debugPrint('Attempting to obtain appointments for user: $user_id');
+      _isLoading = true;
+      _errorMessage = null;
+      notifyListeners();
+      final response = await _apiService.obtain_appointments(user_id);
+      debugPrint("Laravel appointments response: $response");
+      // Process the obtained appointments
+      _appointments = (response['data'] as List)
+          .map((e) => AppointmentModel.fromJson(e))
+          .toList();
       _isLoading = false;
       notifyListeners();
       return true;

@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService {
   // CHANGE THIS to your Laravel API URL
   static const String baseUrl =
-      'http://10.23.15.106:8000/api'; // Android Emulator
+      'http://10.23.15.101:8000/api'; // Android Emulator
   // static const String baseUrl = 'http://localhost:8000/api'; // iOS Simulator
   // static const String baseUrl = 'https://your-api.com/api'; // Production
 
@@ -282,7 +282,7 @@ class ApiService {
   //Adding the emergency contacts
   // ignore: non_constant_identifier_names
   Future<Map<String, dynamic>> add_emergency_contacts({
-    required String userid,
+    required String user_id,
     required String contactName,
     required String contactNumber,
   }) async {
@@ -292,7 +292,7 @@ class ApiService {
         Uri.parse('$baseUrl/add_emergency_contacts'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'userid': userid,
+          'user_id': user_id,
           'contactName': contactName,
           'contactNumber': contactNumber,
         }),
@@ -396,18 +396,24 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> create_counsellor_appointment({
-    required int userId,
-    required int counsellorId,
+    required String user_id,
+    required int counsellor_id,
+    required DateTime appointmentDate,
     required DateTime appointmentTime,
   }) async {
     try {
+      final token = await _getToken();
+      if (token == null) {
+        throw ("No Authentication Token");
+      }
       //Check this Url in the laravel project
       final response = await http.post(
         Uri.parse('$baseUrl/add_appointment'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'user_id': userId,
-          'counsellor_id': counsellorId,
+          'user_id': user_id,
+          'counsellor_id': counsellor_id,
+          'appointment_date': appointmentDate.toIso8601String(),
           'appointment_time': appointmentTime.toIso8601String(),
         }),
       );
@@ -422,6 +428,30 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Failed to create counsellor appointment $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> obtain_appointments(int userId) async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        throw ("No Authentication Token");
+      }
+      final response = await http.get(
+        Uri.parse('$baseUrl/obtain_appointments/$userId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['success']) {
+        return data;
+      } else {
+        throw Exception(data['message'] ?? 'Failed to obtain appointments');
+      }
+    } catch (e) {
+      throw Exception('Failed to obtain appointments $e');
     }
   }
 

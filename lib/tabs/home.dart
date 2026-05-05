@@ -10,8 +10,10 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:safehome/landing/landingPage.dart';
 import 'package:safehome/landing/locationPermission.dart';
+import 'package:safehome/profile/emergency_contacts.dart';
 import 'package:safehome/profile/preferencePage.dart';
 import 'package:safehome/profile/profile.dart';
+import 'package:safehome/tabs/appointments_page.dart';
 import 'package:safehome/tabs/tab/constants.dart';
 import '../app_user.dart';
 import 'tab/anonymouschat.dart';
@@ -38,7 +40,7 @@ class _HomePageContentState extends State<HomePageContent> {
         index = (index + 1) % messages.length;
       });
     });
-    //_getLocation();
+    _getLocation();
     //requestLocationPermission();
     //requestNotificationPermission();
   }
@@ -84,6 +86,20 @@ class _HomePageContentState extends State<HomePageContent> {
               'latitude': _currentLocation!.latitude,
               'longitude': _currentLocation!.longitude,
             });
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Location Selected'),
+            content: const Text("Emergency alert sent"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
       } else {
         SnackBar(
           backgroundColor: Colors.white,
@@ -172,30 +188,130 @@ class _HomePageContentState extends State<HomePageContent> {
               );
             },
             menuChildren: [
+              ListTile(
+                title: StreamBuilder(
+                  stream: userProfileStream(_user!.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Column(
+                        children: [
+                          Text("Something went Wrong"),
+                          Text("Please try Again"),
+                        ],
+                      );
+                    }
+                    if (snapshot.hasData == false) {
+                      return Column(
+                        children: [
+                          Text("Something went Wrong"),
+                          Text("Please try Again"),
+                        ],
+                      );
+                    }
+                    final data = snapshot.data!.data() as Map<String, dynamic>;
+                    return Column(
+                      //mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${data['lastname']} ${data['firstname']}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                subtitle: StreamBuilder(
+                  stream: userProfileStream(_user!.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Column(
+                        children: [
+                          Text("Something went Wrong"),
+                          Text("Please try Again"),
+                        ],
+                      );
+                    }
+                    if (snapshot.hasData == false) {
+                      return Column(
+                        children: [
+                          Text("Something went Wrong"),
+                          Text("Please try Again"),
+                        ],
+                      );
+                    }
+                    final data = snapshot.data!.data() as Map<String, dynamic>;
+                    return Column(
+                      //mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${data['email']}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
               MenuItemButton(
                 leadingIcon: const Icon(Icons.account_circle),
                 child: const Text('Edit Profile'),
-                onPressed: () => Profile(),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Profile()),
+                  );
+                },
               ),
               MenuItemButton(
                 leadingIcon: const Icon(Icons.calendar_today),
                 child: Text("Appointments"),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AppointmentsPage()),
+                  );
+                },
               ),
               MenuItemButton(
                 leadingIcon: const Icon(Icons.private_connectivity),
                 child: const Text('Privacy Settings'),
-                onPressed: () => PreferencesPage(),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PreferencesPage()),
+                  );
+                },
               ),
               MenuItemButton(
                 leadingIcon: const Icon(Icons.settings),
                 child: const Text('Preferences'),
-                onPressed: () => PreferencesPage(),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PreferencesPage()),
+                  );
+                },
               ),
               MenuItemButton(
                 leadingIcon: const Icon(Icons.data_usage),
                 child: const Text('Data and Security'),
-                onPressed: () => PreferencesPage(),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PreferencesPage()),
+                  );
+                },
               ),
               MenuItemButton(
                 leadingIcon: const Icon(Icons.logout),
@@ -313,7 +429,14 @@ class _HomePageContentState extends State<HomePageContent> {
                   MenuItemButton(
                     leadingIcon: const Icon(Icons.contact_emergency),
                     child: const Text('Emergency Contacts'),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EmergencyPage(),
+                        ),
+                      );
+                    },
                   ),
                   MenuItemButton(
                     leadingIcon: const Icon(Icons.share),
@@ -388,19 +511,6 @@ class _HomePageContentState extends State<HomePageContent> {
                             : () {
                                 _getLocation();
                                 debugPrint("error");
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: const Text('Location Selected'),
-                                    content: const Text("Emergency alert sent"),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: const Text('OK'),
-                                      ),
-                                    ],
-                                  ),
-                                );
                               },
                         onHover: (value) {
                           const Color(0xff35b016);

@@ -65,7 +65,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
 
         //save to the database
         await authService.saveEmergencyContact(
-          userid: _user!.uid,
+          user_id: _user!.uid,
           contactName: name,
           contactNumber: phone,
         );
