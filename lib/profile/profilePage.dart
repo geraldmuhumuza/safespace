@@ -6,7 +6,6 @@ import 'package:safehome/app_user.dart';
 import 'package:safehome/home_page.dart';
 import 'package:safehome/imageservice.dart';
 import 'package:safehome/landing/landingPage.dart';
-import 'package:safehome/main.dart';
 import 'package:safehome/profile/profile.dart';
 import 'package:safehome/profile/emergency_contacts.dart';
 import 'package:toggle_switch/toggle_switch.dart';

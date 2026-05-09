@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safehome/app_user.dart';
-import 'package:safehome/main.dart';
 import 'package:safehome/profile/updateProfilePage.dart';
 
 import '../home_page.dart';

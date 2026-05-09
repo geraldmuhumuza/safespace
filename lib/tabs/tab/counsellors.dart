@@ -1,22 +1,10 @@
-// ignore_for_file: unused_import
-
 import 'dart:async';
-import 'dart:ffi' hide Size;
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import "package:flutter_contacts/flutter_contacts.dart";
-import 'package:provider/provider.dart';
-import 'package:safehome/api/api_service.dart';
 import 'package:safehome/api/auth_service.dart';
-import 'package:safehome/main.dart';
-import 'package:safehome/tabs/tab/constants.dart';
 import 'package:safehome/tabs/tab/functions.dart';
-import 'package:safehome/report/report.dart';
-
-import '../../home_page.dart';
 
 final authService = AuthService();
 User? _user;
@@ -75,13 +63,13 @@ class _CounsellorState extends State<Counsellor> {
             StreamBuilder<QuerySnapshot>(
               stream: counsellorStream(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                // if (snapshot.connectionState == ConnectionState.waiting) {
+                //   return const Center(child: CircularProgressIndicator());
+                // }
 
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text("No Counsellor available"));
-                }
+                // if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                //   return const Center(child: Text("No Counsellor available"));
+                // }
 
                 // final docs = snapshot.data!.docs;
 

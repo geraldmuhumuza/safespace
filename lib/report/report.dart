@@ -372,10 +372,10 @@ class _NewHomePageState extends State<NewHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 0, 56, 21),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.black,
+        backgroundColor: const Color.fromARGB(255, 0, 56, 21),
         title: Text(
           "REPORT INCIDENT",
           textAlign: TextAlign.left,
@@ -389,18 +389,18 @@ class _NewHomePageState extends State<NewHomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Your safety is our priority. Your reports are confidential and secure.",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  //fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Text(
+            //     "Your safety is our priority. Your reports are confidential and secure.",
+            //     textAlign: TextAlign.left,
+            //     style: TextStyle(
+            //       fontSize: 18,
+            //       color: Colors.white,
+            //       //fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -419,7 +419,12 @@ class _NewHomePageState extends State<NewHomePage> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.privacy_tip, color: Colors.white, size: 24),
+                        Icon(
+                          Icons.privacy_tip,
+                          color: Colors.white,
+                          size: 30,
+                          weight: 20,
+                        ),
                         SizedBox(width: 10),
                         Expanded(
                           child: Column(
@@ -430,6 +435,7 @@ class _NewHomePageState extends State<NewHomePage> {
                                 style: TextStyle(
                                   color: Color(0xff7ee183),
                                   fontSize: 18,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                               SizedBox(height: 4),
@@ -482,7 +488,8 @@ class _NewHomePageState extends State<NewHomePage> {
                         const Icon(
                           Icons.privacy_tip,
                           color: Colors.red,
-                          size: 24,
+                          size: 30,
+                          weight: 20,
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -497,7 +504,7 @@ class _NewHomePageState extends State<NewHomePage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 4),
+
                               const Text(
                                 "Report an incident that is currently happening or ongoing",
                                 style: TextStyle(
@@ -505,7 +512,15 @@ class _NewHomePageState extends State<NewHomePage> {
                                   fontSize: 16,
                                 ),
                               ),
+                              //const Divider(color: Colors.red),
                               ListTile(
+                                style: ListTileStyle.drawer,
+                                shape: Border(
+                                  top: BorderSide(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                ),
                                 onTap: () {
                                   showDialog(
                                     context: context,
@@ -569,12 +584,14 @@ class _NewHomePageState extends State<NewHomePage> {
                                   Icons.arrow_forward,
                                   size: 20,
                                   color: Colors.red,
+                                  weight: 20,
                                 ),
                                 title: const Text(
                                   "Start Report",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.red,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),

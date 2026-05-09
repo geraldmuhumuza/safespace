@@ -40,7 +40,7 @@ class _HomePageContentState extends State<HomePageContent> {
         index = (index + 1) % messages.length;
       });
     });
-    _getLocation();
+    //_getLocation();
     //requestLocationPermission();
     //requestNotificationPermission();
   }
@@ -53,7 +53,12 @@ class _HomePageContentState extends State<HomePageContent> {
 
   LatLng? _currentLocation;
   //final MapController _mapController = MapController();
-  //
+
+  Future<void> requestLocationPermission() async {
+    await LocationPermissionRequest.initialize();
+    // Implementation for requesting location permission
+  }
+
   Future<void> logoutUser() async {
     await FirebaseAuth.instance.signOut();
     // ignore: use_build_context_synchronously
@@ -64,6 +69,7 @@ class _HomePageContentState extends State<HomePageContent> {
   Future<void> _getLocation() async {
     try {
       await LocationPermissionRequest.initialize();
+
       Position position = await Geolocator.getCurrentPosition(
         // ignore: deprecated_member_use
         desiredAccuracy: LocationAccuracy.high,
@@ -495,23 +501,26 @@ class _HomePageContentState extends State<HomePageContent> {
                           weight: 100,
                           fontWeight: FontWeight.bold,
                         ),
-                        onPressed: _currentLocation == null
-                            ? () {
-                                SnackBar(
-                                  backgroundColor: Colors.white,
-                                  elevation: 15,
-                                  padding: EdgeInsets.all(8.0),
-                                  margin: EdgeInsets.all(10),
-                                  content: Text(
-                                    "Error getting your location",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                );
-                              }
-                            : () {
-                                _getLocation();
-                                debugPrint("error");
-                              },
+                        // onPressed: _currentLocation == null
+                        //     ? () {
+                        //         debugPrint("Error getting location");
+                        //         SnackBar(
+                        //           backgroundColor: Colors.white,
+                        //           elevation: 15,
+                        //           padding: EdgeInsets.all(8.0),
+                        //           margin: EdgeInsets.all(10),
+                        //           content: Text(
+                        //             "Error getting your location",
+                        //             style: TextStyle(color: Colors.white),
+                        //           ),
+                        //         );
+                        //       }
+                        //     :
+                        onPressed: () {
+                          debugPrint("Getting location...");
+                          _getLocation();
+                          debugPrint("error");
+                        },
                         onHover: (value) {
                           const Color(0xff35b016);
                         },

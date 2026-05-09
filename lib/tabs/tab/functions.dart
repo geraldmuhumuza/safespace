@@ -1,13 +1,7 @@
-// ignore_for_file: unused_import
-
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
-import 'package:safehome/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../home_page.dart';

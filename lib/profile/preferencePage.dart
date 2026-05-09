@@ -1,4 +1,3 @@
-//Data and security Preferwnces
 import 'package:flutter/material.dart';
 
 class PreferencesPage extends StatefulWidget {

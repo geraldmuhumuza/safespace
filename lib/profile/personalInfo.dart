@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-//Personal Information from the Profile page in
 class PersonalPage extends StatefulWidget {
   const PersonalPage({super.key});
 

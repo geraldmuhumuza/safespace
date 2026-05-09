@@ -123,6 +123,7 @@ class _FinalReportPageState extends State<FinalReportPage> {
                             widget.incident,
                             selectedValue,
                           );
+                          selectedValue.isEmpty == true;
                           // saveReportWithUser(
                           //   widget.reportTime,
                           //   widget.date,
@@ -153,6 +154,7 @@ class _FinalReportPageState extends State<FinalReportPage> {
                           //   widget.incident,
                           //   selectedValue,
                           // );
+                          selectedValue.isEmpty == true;
                         },
                       ),
                       const Text("No"),

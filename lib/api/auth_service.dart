@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, unused_import
-
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safehome/home_page.dart';
 import 'package:safehome/models/Appointment_model.dart';
-import 'package:safehome/models/Counsellor_model.dart';
+import 'package:safehome/models/counsellor_model.dart';
 import 'package:safehome/models/Emergency_contact_model.dart';
 import 'package:safehome/models/support_model.dart';
 import 'package:safehome/profile/profile.dart';
@@ -674,8 +672,8 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  List<Counsellor_Model> _counsellors = [];
-  List<Counsellor_Model> get counsellor => _counsellors;
+  List<CounsellorModel> _counsellors = [];
+  List<CounsellorModel> get counsellor => _counsellors;
 
   Future<bool> obtain_counsellors() async {
     try {
@@ -686,7 +684,7 @@ class AuthService with ChangeNotifier {
       final response = await _apiService.obtain_counsellors();
       debugPrint("Laravel Counselloer response: $response");
       _counsellors = (response['data'] as List)
-          .map((e) => Counsellor_Model.fromJson(e))
+          .map((e) => CounsellorModel.fromJson(e))
           .toList();
 
       _isLoading = false;

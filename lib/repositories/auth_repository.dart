@@ -1,6 +1,4 @@
-// lib/repositories/auth_repository.dart
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +40,7 @@ class AuthRepository {
     required email,
     required lastName,
     required password,
+    //Personal Information from the Profile page in
     required firstName,
     required passwordconfirm,
     required dobController,

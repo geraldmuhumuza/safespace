@@ -1,7 +1,4 @@
-// ignore_for_file: unused_import
-
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -12,10 +9,7 @@ import 'package:safehome/tabs/tab/constants.dart';
 import 'package:show_hide_password/show_hide_password.dart';
 
 import '../api/auth_service.dart';
-import '../tabs/tab/functions.dart';
-import 'landingFunctions/loginUser.dart';
 import 'landingFunctions/show_forgort_password_dialog.dart';
-import 'landingFunctions/signInWithGoogle.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});

@@ -5,10 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:safehome/app_user.dart';
 import 'package:show_hide_password/show_hide_password_text_field.dart';
-
-import '../main.dart';
 import 'landingFunctions/loginUser.dart';
-import 'landingFunctions/signInWithGoogle.dart';
+import 'landingFunctions/signIn_With_Google.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

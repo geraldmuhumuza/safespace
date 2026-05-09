@@ -78,6 +78,7 @@ class _HappenedPageState extends State<HappenedPage> {
                       ), //const FinalReportPage(),
                     ),
                   );
+                  _incidentController.clear();
                 },
                 style: ElevatedButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 20),

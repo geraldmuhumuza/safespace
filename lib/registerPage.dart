@@ -1,18 +1,11 @@
-// ignore_for_file: unused_element, use_build_context_synchronously, unused_field, unused_import
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:safehome/main.dart';
 import 'package:show_hide_password/show_hide_password_text_field.dart';
 
 import 'api/auth_service.dart';
-import 'home_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

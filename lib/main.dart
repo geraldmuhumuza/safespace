@@ -1,6 +1,3 @@
-//import 'dart:html';
-// ignore_for_file: unused_element
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +35,6 @@ void main() async {
   );
   await NotificationService.initialize();
 }
-
-int _currentIndex = 0;
 
 class SafeHome extends StatelessWidget {
   const SafeHome({super.key});

@@ -1,9 +1,6 @@
-// ignore_for_file: unused_element
-
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:safehome/profile/profilePage.dart';
-
+import 'package:safehome/api_keys/api_keys.dart' as api_keys;
 import 'tabs/home.dart';
 import 'tabs/support.dart';
 import 'report/report.dart';
@@ -17,14 +14,12 @@ class SafeSpace extends StatefulWidget {
   State<SafeSpace> createState() => _SafeSpaceState();
 }
 
-ThemeMode _themeMode = ThemeMode.light;
-
 class _SafeSpaceState extends State<SafeSpace> {
   final List<Widget> _pages = [
     const HomePageContent(),
     const NewHomePage(),
     const SupportPage(),
-    const ProfilePage(),
+    // const ProfilePage(),
   ];
 
   @override
@@ -43,9 +38,7 @@ class _SafeSpaceState extends State<SafeSpace> {
 
     final genAI = GenerativeModel(
       model: "gemini-2.5-flash",
-      apiKey: const String.fromEnvironment(
-        'AIzaSyCgO8D8LS8bRhdwetrauolCcOkqKLnJYwo',
-      ),
+      apiKey: const String.fromEnvironment(api_keys.geminiApikey),
       generationConfig: GenerationConfig(
         temperature: 0.4,
         topK: 32,
@@ -92,11 +85,11 @@ class _SafeSpaceState extends State<SafeSpace> {
             label: "Support",
             tooltip: "Support",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_3),
-            label: "Profile",
-            tooltip: "Profile",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.person_3),
+          //   label: "Profile",
+          //   tooltip: "Profile",
+          // ),
         ],
       ),
     );
