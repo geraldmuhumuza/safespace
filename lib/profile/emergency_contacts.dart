@@ -149,8 +149,8 @@ class _EmergencyPageState extends State<EmergencyPage> {
                           final contacts = authService.emergencyContacts[index];
                           return ListTile(
                             leading: const Icon(Icons.person),
-                            title: Text(contacts.contactName ?? 'Unknown'),
-                            subtitle: Text(contacts.phone ?? 'No phone'),
+                            title: Text(contacts.contactName),
+                            subtitle: Text(contacts.phone),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
                               onPressed: () async {
@@ -181,6 +181,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
                                 if (confirm == true) {
                                   await authService.delete_emergency_contact(
                                     contacts.id,
+                                    _user!.uid,
                                   );
                                 }
                               },

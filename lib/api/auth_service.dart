@@ -650,12 +650,12 @@ class AuthService with ChangeNotifier {
   }
 
   //Deleting the emergency contact
-  Future<bool> delete_emergency_contact(int contactId) async {
+  Future<bool> delete_emergency_contact(int contactId, String uid) async {
     try {
       _isLoading = true;
       notifyListeners();
 
-      await _apiService.delete_emergencyContact(contactId);
+      await _apiService.delete_emergencyContact(contactId, uid);
 
       // Remove from local list without re-fetching from API
       _emergencyContacts.removeWhere((contact) => contact.id == contactId);
@@ -717,6 +717,26 @@ class AuthService with ChangeNotifier {
     }
   }
 
+  Future<bool> obtain_single_support(String supportid) async {
+    try {
+      debugPrint('Attempting to obtain Support');
+      _isLoading = true;
+      _errorMessage = null;
+      notifyListeners();
+      final response = await _apiService.obtain_single_support(supportid);
+      debugPrint("Laravel Support response: $response");
+      _support = (response['data'] as List)
+          .map((e) => Support_Model.fromJson(e))
+          .toList();
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<bool> add_appointment({
     required String user_id,
     required int counsellor_id,
@@ -732,8 +752,8 @@ class AuthService with ChangeNotifier {
       final response = await _apiService.create_counsellor_appointment(
         user_id: user_id,
         counsellor_id: counsellor_id,
-        appointmentDate: DateTime.parse("$appointmentDate"),
-        appointmentTime: DateTime.parse("$appointmentTime"),
+        appointmentDate: DateTime.parse(appointmentDate),
+        appointmentTime: DateTime.parse(appointmentTime),
       );
       debugPrint("Laravel emergency contact response: $response");
       _userData = response['data']['user'];
@@ -764,6 +784,25 @@ class AuthService with ChangeNotifier {
       return true;
     } catch (e) {
       throw Exception(e.toString());
+    }
+  }
+
+  Future<bool> delete_appointment(int appointment_id, String uid) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      await _apiService.delete_appointments(appointment_id, uid);
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      _errorMessage = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
     }
   }
 }

@@ -278,6 +278,55 @@ class ApiService {
     }
   }
 
+  Future<Map<String, dynamic>> obtain_report(String uid) async {
+    try {
+      //Check this Url in the laravel project
+      final response = await http.get(
+        Uri.parse('$baseUrl/obtain_report/$uid'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 201 && data['success']) {
+        // Save Sanctum token
+        return data;
+      } else {
+        throw Exception(data['message'] ?? 'Signup failed');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> delete_report(int reportId, String uid) async {
+    try {
+      final token = await _getToken();
+
+      if (token == null) throw Exception('No authentication token');
+
+      final response = await http.delete(
+        Uri.parse('$baseUrl/delete_report/$reportId, $uid'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success']) {
+        return data;
+      } else {
+        throw Exception(data['message'] ?? 'Failed to delete contact');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  // emergency contacts
+
   //Adding the emergency contacts
   // ignore: non_constant_identifier_names
   Future<Map<String, dynamic>> add_emergency_contacts({
@@ -299,11 +348,11 @@ class ApiService {
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 201 && data['success']) {
+      if (response.statusCode == 200 && data['success']) {
         // Save Sanctum token
         return data;
       } else {
-        throw Exception(data['message'] ?? 'Signup failed');
+        throw Exception(data['message'] ?? 'Repor received');
       }
     } catch (e) {
       throw Exception('Network error: $e');
@@ -343,14 +392,17 @@ class ApiService {
   }
 
   //Deleting the emergency contact
-  Future<Map<String, dynamic>> delete_emergencyContact(int contactId) async {
+  Future<Map<String, dynamic>> delete_emergencyContact(
+    int contactId,
+    String uid,
+  ) async {
     try {
       final token = await _getToken();
 
       if (token == null) throw Exception('No authentication token');
 
       final response = await http.delete(
-        Uri.parse('$baseUrl/delete_emergency_contact/$contactId'),
+        Uri.parse('$baseUrl/delete_emergency_contact/$contactId, $uid'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -454,6 +506,33 @@ class ApiService {
     }
   }
 
+  Future<Map<String, dynamic>> delete_appointments(
+    int userId,
+    String appointment_id,
+  ) async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        throw ("No Authentication Token");
+      }
+      final response = await http.delete(
+        Uri.parse('$baseUrl/delete_appointment/$userId/$appointment_id'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['success']) {
+        return data;
+      } else {
+        throw Exception(data['message'] ?? 'Failed to delete appointment');
+      }
+    } catch (e) {
+      throw Exception('Failed to delete appointment: $e');
+    }
+  }
+
   Future<Map<String, dynamic>> obtain_support() async {
     try {
       final token = await _getToken();
@@ -461,7 +540,33 @@ class ApiService {
         throw ("No Authentication Token");
       }
       final response = await http.get(
-        Uri.parse('$baseUrl/obtain_support'),
+        Uri.parse('$baseUrl/obtain_all_support'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['success']) {
+        return data;
+      } else {
+        throw Exception(
+          data['message'] ?? 'Failed to obtain the support information',
+        );
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> obtain_single_support(String supportid) async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        throw ("No Authentication Token");
+      }
+      final response = await http.get(
+        Uri.parse('$baseUrl/obtain_support/$supportid'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

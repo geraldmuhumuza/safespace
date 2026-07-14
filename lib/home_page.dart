@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:safehome/api_keys/api_keys.dart' as api_keys;
 import 'tabs/home.dart';
 import 'tabs/support.dart';
 import 'report/report.dart';
@@ -38,7 +37,7 @@ class _SafeSpaceState extends State<SafeSpace> {
 
     final genAI = GenerativeModel(
       model: "gemini-2.5-flash",
-      apiKey: const String.fromEnvironment(api_keys.geminiApikey),
+      apiKey: const String.fromEnvironment("GEMINI_API_KEY"),
       generationConfig: GenerationConfig(
         temperature: 0.4,
         topK: 32,
